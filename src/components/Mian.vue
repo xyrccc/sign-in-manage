@@ -1,9 +1,20 @@
 <template>
   <div>
     <el-container class="Main">
+
       <el-header style="width:100vw">
-        <h2 class="title">签到管理系统</h2>
+        <el-col :span="12">
+          <div class="title">
+            签到管理系统
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="admin">
+          <el-button type="primary" @click="admin" icon="el-icon-user">{{this.userType}}<i class="el-icon-arrow-down el-icon--down"></i></el-button>
+          </div>
+        </el-col>
       </el-header>
+
       <el-container>
         <el-aside style="width:10vw">
           <el-menu router :default-active="$route.path">
@@ -29,12 +40,15 @@
 export default {
   data() {
     return {
-        table:false
+        table:false,
+        userType:localStorage.getItem("userType")
     };
   },
 
   methods: {
-
+      admin(){
+          this.$router.push({name:'Admin'})
+      }
   },
 
   mounted() {
@@ -49,11 +63,16 @@ export default {
 }
 .title{
   color: white;
-  font-size: large;
+  font-size: x-large;
+  text-align: left;
+  margin-top: 10px;
+}
+.admin{
+  text-align: right;
+  margin-top: 10px;
 }
 .el-header {
   background-color: #0F98FF;
-  text-align: left;
 }
 .el-menu-item-group {
   text-align: left;
@@ -64,4 +83,5 @@ export default {
 .el-main {
   background-color: #dcdfe6;
 }
+
 </style>

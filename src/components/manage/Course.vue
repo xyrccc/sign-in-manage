@@ -1,35 +1,58 @@
 <template>
   <div class="table_box">
 
-    <div class="title">
-      课程管理
-    </div>
+    <el-col :span="12">
+     <div class="title">
+       课程管理
+     </div>
+    </el-col>
+    <el-col :span="12">
+     <div class="add">
+       <el-button type="primary" size="mini" @click="addCourse">+新增课程</el-button>
+     </div>
+    </el-col>
 
     <el-card>
+
       <el-form :model="formInline" label-width="auto">
-        <el-col :span="3">
-          <el-form-item label="日期：">
-            <el-input v-model="formInline.date" size="mini"></el-input>
+        <el-col :span="5">
+          <el-form-item>
+            <el-date-picker
+              v-model="value1"
+              type="date"
+              placeholder="请输入日期"
+              size="mini">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item>
+            <el-select
+              v-model="value"
+              placeholder="请选择时间段"
+              size="mini">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="3">
-          <el-form-item label="时间段：">
-            <el-input v-model="formInline.time" size="mini"></el-input>
+          <el-form-item>
+            <el-input v-model="formInline.room" size="mini" placeholder="教室"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="3">
-          <el-form-item label="教室：">
-            <el-input v-model="formInline.room" size="mini"></el-input>
+          <el-form-item>
+            <el-input v-model="formInline.course" size="mini" placeholder="课程名称"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="3">
-          <el-form-item label="课程名称：">
-            <el-input v-model="formInline.course" size="mini"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="3">
-          <el-form-item label="任课教师：">
-            <el-input v-model="formInline.teacher" size="mini"></el-input>
+          <el-form-item>
+            <el-input v-model="formInline.teacher" size="mini" placeholder="任课教师"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -82,11 +105,20 @@
             return {
                 formInline: {
                     date: '',
-                    time: '',
                     course:'',
                     teacher:'',
                     room:''
                 },
+                options: [{
+                    value: '选项1',
+                    label: '08:00-10:40'
+                },
+                    {
+                        value: '选项2',
+                        label: '14:00-15:40'
+                    }],
+                value: '',
+                value1: '',
                 handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
@@ -118,7 +150,11 @@
                 console.log('submit!');
             },
             reset() {
-                console.log('reset!');
+                this.formInline.room='';
+                this.formInline.course='';
+                this.formInline.teacher='';
+                this.value='';
+                this.value1='';
             },
             // 每页多少条
             handleSizeChange(val) {
@@ -130,14 +166,17 @@
                 this.currentPage = val;
             },
             checkInfo(){
-                console.log('submit!');
+                this.$router.push({path:'/manage/Course_Check'})
             },
             editInfo(){
-                console.log('submit!');
+                this.$router.push({path:'/manage/Course_Edit'})
             },
             deleteInfo(){
                 console.log('submit!');
             },
+            addCourse(){
+                this.$router.push({path:'/manage/Course_Add'})
+            }
         }
 
     }
@@ -148,6 +187,9 @@
   .title{
     font-size: large;
     text-align: left;
+  }
+  .add{
+    text-align: right;
   }
 </style>
 

@@ -1,33 +1,25 @@
 <template>
   <div class="table_box">
 
-    <el-col :span="12">
-      <div class="title">
-        设备管理
-      </div>
-    </el-col>
-    <el-col :span="12">
-      <div class="add">
-        <el-button type="primary" size="mini" @click="collectLog">采集日志</el-button>
-        <el-button type="primary" size="mini" @click="addDevice">+新增设备</el-button>
-      </div>
-    </el-col>
+    <div class="title">
+      课程管理>课程详情
+    </div>
 
     <el-card>
+
+      <div style="text-align: left">
+        课程ID：{{this.courseId}}-{{this.courseName}}
+      </div>
+
       <el-form :model="formInline" label-width="auto">
         <el-col :span="4">
-          <el-form-item>
-            <el-input v-model="formInline.id" size="mini" placeholder="设备ID"></el-input>
+          <el-form-item label="学号：">
+            <el-input v-model="formInline.id" size="mini"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item>
-            <el-input v-model="formInline.state" size="mini" placeholder="设备状态"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-form-item>
-            <el-input v-model="formInline.room" size="mini" placeholder="设备所在教室"></el-input>
+          <el-form-item label="姓名：">
+            <el-input v-model="formInline.name" size="mini"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -42,22 +34,21 @@
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="设备ID"  ></el-table-column>
-        <el-table-column  prop="id" label="设备KEY"  ></el-table-column>
-        <el-table-column  prop="id" label="设备状态"  ></el-table-column>
-        <el-table-column  prop="id" label="设备所在教室"></el-table-column>
-        <el-table-column  prop="id" label="今日采集条数"></el-table-column>
-        <el-table-column  prop="id" label="累计采集条数"></el-table-column>
-        <el-table-column fixed="right" label="操作" align='center' width="180">
+        <el-table-column  prop="id" label="学号"  ></el-table-column>
+        <el-table-column  prop="id" label="姓名"  ></el-table-column>
+        <el-table-column  prop="id" label="学院"  ></el-table-column>
+        <el-table-column  prop="id" label="班级"></el-table-column>
+        <el-table-column  prop="id" label="性别"></el-table-column>
+        <el-table-column  prop="id" label="正常签到"></el-table-column>
+        <el-table-column  prop="id" label="迟到/早退"></el-table-column>
+        <el-table-column  prop="id" label="缺勤次数"></el-table-column>
+        <el-table-column  prop="id" label="请假次数"></el-table-column>
+        <el-table-column fixed="right" label="操作" align='center'>
           <template slot-scope="scope">
-<!--            <el-button-group>-->
-            <el-button type="text" @click="collectLog">采集日志</el-button>
+            <el-button type="text" @click="checkInfo">查看</el-button>
             <el-button type="text" @click="editInfo">编辑</el-button>
-            <el-button type="text" @click="deleteInfo">删除</el-button>
-<!--            </el-button-group>-->
           </template>
         </el-table-column>
-
       </el-table>
 
       <div style="margin-top:20px">
@@ -79,13 +70,17 @@
         data() {
             return {
                 formInline: {
-                    id: '',
-                    state: '',
+                    date: '',
+                    time: '',
+                    course:'',
+                    teacher:'',
                     room:''
                 },
                 handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
+                courseId:'10001',
+                courseName:'C++程序设计',
             }
         },
 
@@ -114,9 +109,7 @@
                 console.log('submit!');
             },
             reset() {
-                this.formInline.id='';
-                this.formInline.name='';
-                this.formInline.state='';
+                console.log('reset!');
             },
             // 每页多少条
             handleSizeChange(val) {
@@ -128,20 +121,10 @@
                 this.currentPage = val;
             },
             checkInfo(){
-                this.$router.push({path:'/manage/Device_Check'})
+                this.$router.push({path:'/manage/Course_Check_Check'})
             },
             editInfo(){
-                this.$router.push({path:'/manage/Device_Edit'})
-            },
-            deleteInfo(){
-                console.log('submit!');
-            },
-            addDevice(){
-                this.$router.push({path:'/manage/Device_Add'})
-            },
-            collectLog(){
-                this.$router.push({path:'/manage/Device_Log'})
-            },
+                this.$router.push({path:'/manage/Course_Check_Edit'})            },
         }
 
     }
@@ -152,8 +135,5 @@
   .title{
     font-size: large;
     text-align: left;
-  }
-  .add{
-    text-align: right;
   }
 </style>

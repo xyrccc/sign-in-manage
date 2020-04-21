@@ -2,46 +2,28 @@
   <div class="table_box">
 
     <div class="title">
-      签到管理>签到详情
+      课程管理>课程详情>学生签到详情
     </div>
 
     <el-card>
-      <el-form :model="formInline" label-width="auto">
-        <el-col :span="4">
-          <el-form-item label="学号：">
-            <el-input v-model="formInline.id" size="mini"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-form-item label="姓名：">
-            <el-input v-model="formInline.name" size="mini"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-form-item label="签到情况：">
-            <el-input v-model="formInline.info" size="mini"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item>
-            <el-button-group>
-              <el-button type="primary" size="mini" @click="check">查询</el-button>
-              <el-button type="primary" size="mini" @click="reset">重置</el-button>
-            </el-button-group>
-          </el-form-item>
-        </el-col>
-      </el-form>
+
+      <div style="text-align: left">
+        {{this.studentId}}-{{this.studentName}}
+      </div>
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="学号"  ></el-table-column>
-        <el-table-column  prop="id" label="姓名"  ></el-table-column>
-        <el-table-column  prop="id" label="学院"  ></el-table-column>
-        <el-table-column  prop="id" label="班级"></el-table-column>
-        <el-table-column  prop="id" label="性别"></el-table-column>
+        <el-table-column  prop="id" label="课时"  ></el-table-column>
+        <el-table-column  prop="id" label="课程日期"  ></el-table-column>
+        <el-table-column  prop="id" label="时间段"  ></el-table-column>
         <el-table-column  prop="id" label="签到时间"></el-table-column>
         <el-table-column  prop="id" label="签退时间"></el-table-column>
         <el-table-column  prop="id" label="签到情况"></el-table-column>
+        <el-table-column fixed="right" label="操作" align='center'>
+          <template slot-scope="scope">
+            <el-button type="text" @click="editInfo">编辑</el-button>
+          </template>
+        </el-table-column>
       </el-table>
 
       <div style="margin-top:20px">
@@ -62,16 +44,11 @@
     export default {
         data() {
             return {
-                formInline: {
-                    date: '',
-                    time: '',
-                    course:'',
-                    teacher:'',
-                    room:''
-                },
                 handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
+                studentId:'201626810201',
+                studentName:'张三',
             }
         },
 
@@ -96,13 +73,8 @@
         },
 
         methods: {
-            check() {
-                console.log('submit!');
-            },
-            reset() {
-                this.id='';
-                this.name='';
-                this.info='';
+            editInfo() {
+                this.$router.push({path:'/manage/Course_Check_Check_Edit'})
             },
             // 每页多少条
             handleSizeChange(val) {
@@ -125,3 +97,4 @@
     text-align: left;
   }
 </style>
+

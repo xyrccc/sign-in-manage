@@ -1,0 +1,125 @@
+<template>
+  <div class="table_box">
+
+    <div class="title">
+      学生信息管理>新增学生
+    </div>
+
+    <el-card>
+      <el-form>
+        <el-form-item>
+          <div class="title1">
+            单个新增
+          </div>
+          <el-col :span="4">
+            <el-input v-model="id" placeholder="请输入学号"></el-input>
+          </el-col>
+          <el-col :span="4">
+            <el-input v-model="name" placeholder="请输入姓名"></el-input>
+          </el-col>
+          <el-col :span="4">
+            <el-input v-model="major" placeholder="请输入学院"></el-input>
+          </el-col>
+          <el-col :span="4">
+            <el-input v-model="classroom" placeholder="请输入班级"></el-input>
+          </el-col>
+          <el-col :span="4">
+            <el-input v-model="sex" placeholder="请输入性别"></el-input>
+          </el-col>
+          <el-col :span="3">
+            <el-input v-model="mac" placeholder="请输入终端MAC"></el-input>
+          </el-col>
+          <el-col :span="1">
+            <el-button type="text" icon="el-icon-circle-plus-outline"></el-button>
+          </el-col>
+          <div class="title2">
+            *注：所有项均为必填项
+          </div>
+          <el-col :span="2">
+           <div class="title1">
+             批量上传
+           </div>
+          </el-col>
+          <el-col :span="2">
+            <el-button type="text">导入</el-button>
+          </el-col>
+        </el-form-item>
+
+        <el-form-item>
+          <div class="title3">
+            一、上传文件说明
+            <br>
+            1、仅支持*xlsh或xlsxw文件格式di第一行表头不可修改；
+            <br>
+            2、所有项均为必填项。
+            <br>
+            3、文件大小5M以内，最多可上传100条。
+            <br>
+            二、文件按照格式如下：
+            <el-button type="text">点击下载模版</el-button>
+            <br>
+            <img class="studentAdd" src="../../../static/images/studentAdd.png" ></img>
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <el-col :span="8">
+            <el-button type="primary" @click="confirm">确定</el-button>
+            <el-button type="primary" plain @click="cancel">取消</el-button>
+          </el-col>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
+</template>
+<script>
+    export default {
+        data() {
+            return {
+                id:'',
+                name:'',
+                mac:'',
+                classroom:'',
+                major:'',
+                sex:'',
+            }
+        },
+
+        mounted(){
+        },
+
+        methods: {
+            confirm(){
+                this.$router.push({path:'/manage/StudentInfo'})
+            },
+            cancel(){
+                this.$router.push({path:'/manage/StudentInfo'})
+            },
+        }
+
+    }
+
+</script>
+
+<style scoped>
+  .title{
+    font-size: large;
+    text-align: left;
+  }
+  .title1{
+    font-size: medium;
+    text-align: left;
+  }
+  .title2{
+    font-size: small;
+    text-align: left;
+    color: red;
+  }
+  .title3{
+    font-size: small;
+    text-align: left;
+  }
+  .el-col{
+    text-align: left;
+  }
+</style>
+
