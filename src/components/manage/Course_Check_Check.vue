@@ -2,8 +2,11 @@
   <div class="table_box">
 
     <div class="title">
-      课程管理>课程详情>学生签到详情
+      <el-button type="text" class="title" size="mini" @click="goBack">课程管理>课程详情>学生签到详情</el-button>
     </div>
+<!--    <div class="title">-->
+<!--      课程管理>课程详情>学生签到详情-->
+<!--    </div>-->
 
     <el-card>
 
@@ -73,6 +76,9 @@
         },
 
         methods: {
+            goBack(){
+                this.$router.push({path:'/manage/Course_Check'});
+            },
             editInfo() {
                 this.$router.push({path:'/manage/Course_Check_Check_Edit'})
             },

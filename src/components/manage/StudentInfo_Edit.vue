@@ -2,8 +2,11 @@
   <div class="table_box">
 
     <div class="title">
-      学生信息管理>编辑学生
+      <el-button type="text" class="title" size="mini" @click="goBack">学生信息管理>编辑学生</el-button>
     </div>
+<!--    <div class="title">-->
+<!--      学生信息管理>编辑学生-->
+<!--    </div>-->
 
     <el-card>
       <el-form label-width="auto">
@@ -66,6 +69,9 @@
         },
 
         methods: {
+            goBack(){
+                this.$router.push({path:'/manage/StudentInfo'});
+            },
             confirm(){
                 this.$router.push({path:'/manage/StudentInfo'})
             },

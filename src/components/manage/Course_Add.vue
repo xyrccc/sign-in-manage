@@ -1,9 +1,12 @@
 <template>
   <div class="table_box">
 
-      <div class="title">
-        课程管理>新增课程
-      </div>
+    <div class="title">
+      <el-button type="text" class="title" size="mini" @click="goBack">课程管理>新增课程</el-button>
+    </div>
+<!--      <div class="title">-->
+<!--        课程管理>新增课程-->
+<!--      </div>-->
 
     <el-card>
       <el-form label-width="auto">
@@ -194,6 +197,9 @@
         },
 
         methods: {
+            goBack(){
+                this.$router.push({path:'/manage/Course'});
+            },
             confirm(){
                 this.$router.push({path:'/manage/Course'})
             },

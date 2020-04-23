@@ -2,8 +2,11 @@
   <div class="table_box">
 
     <div class="title">
-      设备管理>新增设备
+      <el-button type="text" class="title" size="mini" @click="goBack">设备管理>新增设备</el-button>
     </div>
+<!--    <div class="title">-->
+<!--      设备管理>新增设备-->
+<!--    </div>-->
 
     <el-card>
       <el-form>
@@ -76,6 +79,9 @@
         },
 
         methods: {
+            goBack(){
+                this.$router.push({path:'/manage/Device'});
+            },
             confirm(){
                 this.$router.push({path:'/manage/Device'})
             },

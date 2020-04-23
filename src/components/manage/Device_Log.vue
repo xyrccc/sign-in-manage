@@ -1,9 +1,12 @@
 <template>
   <div class="table_box">
 
-      <div class="title">
-        设备管理>收集日志
-      </div>
+    <div class="title">
+      <el-button type="text" class="title" size="mini" @click="goBack">设备管理>收集日志</el-button>
+    </div>
+<!--      <div class="title">-->
+<!--        设备管理>收集日志-->
+<!--      </div>-->
 
     <el-card>
 <!--      <el-form :model="formInline">-->
@@ -114,6 +117,9 @@
         },
 
         methods: {
+            goBack(){
+                this.$router.push({path:'/manage/Device'});
+            },
             check() {
                 console.log('submit!');
             },

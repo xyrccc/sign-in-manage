@@ -2,8 +2,11 @@
   <div class="table_box">
 
     <div class="title">
-      账号管理>修改密码
+      <el-button type="text" class="title" size="mini" @click="goBack">账号管理>修改密码</el-button>
     </div>
+<!--    <div class="title">-->
+<!--      账号管理>修改密码-->
+<!--    </div>-->
 
     <el-card>
       <el-form :model="ruleForm" :rules="rules"
@@ -98,6 +101,9 @@
             console.log(this.ruleForm.newPwd2)
         },
         methods:{
+            goBack(){
+                this.$router.push({path:'/manage/Admin'});
+            },
             handleSubmit(event){
                 this.$refs.ruleForm.validate((valid) => {
                     if(valid){

@@ -2,8 +2,11 @@
   <div class="table_box">
 
     <div class="title">
-      签到管理>签到详情
+      <el-button type="text" class="title" size="mini" @click="goBack">签到管理>签到详情</el-button>
     </div>
+<!--    <div class="title">-->
+<!--      签到管理>签到详情-->
+<!--    </div>-->
 
     <el-card>
       <el-form :model="formInline" label-width="auto">
@@ -96,6 +99,9 @@
         },
 
         methods: {
+            goBack(){
+                this.$router.push({path:'/manage/SignIn'});
+            },
             check() {
                 console.log('submit!');
             },
