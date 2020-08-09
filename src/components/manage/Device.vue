@@ -8,7 +8,7 @@
     </el-col>
     <el-col :span="12">
       <div class="add">
-        <el-button type="primary" size="mini" @click="collectLog">采集日志</el-button>
+        <el-button type="primary" size="mini" @click="collectLog1">采集日志</el-button>
         <el-button type="primary" size="mini" @click="addDevice">+新增设备</el-button>
       </div>
     </el-col>
@@ -42,18 +42,18 @@
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="设备ID"  ></el-table-column>
-        <el-table-column  prop="id" label="设备KEY"  ></el-table-column>
-        <el-table-column  prop="id" label="设备状态"  ></el-table-column>
-        <el-table-column  prop="id" label="设备所在教室"></el-table-column>
-        <el-table-column  prop="id" label="今日采集条数"></el-table-column>
-        <el-table-column  prop="id" label="累计采集条数"></el-table-column>
+        <el-table-column  prop="deviceId" label="设备ID"  ></el-table-column>
+        <el-table-column  prop="key" label="设备KEY"  ></el-table-column>
+        <el-table-column  prop="state" label="设备状态"  ></el-table-column>
+        <el-table-column  prop="room" label="设备所在教室"></el-table-column>
+        <el-table-column  prop="number" label="今日采集条数"></el-table-column>
+        <el-table-column  prop="count" label="累计采集条数"></el-table-column>
         <el-table-column fixed="right" label="操作" align='center' width="180">
           <template slot-scope="scope">
 <!--            <el-button-group>-->
-            <el-button type="text" @click="collectLog">采集日志</el-button>
-            <el-button type="text" @click="editInfo">编辑</el-button>
-            <el-button type="text" @click="deleteInfo">删除</el-button>
+            <el-button type="text" @click="collectLog2(scope.row.deviceId)">采集日志</el-button>
+            <el-button type="text" @click="editInfo(scope.row.deviceId)">编辑</el-button>
+            <el-button type="text" @click="deleteInfo(scope.row.deviceId)">删除</el-button>
 <!--            </el-button-group>-->
           </template>
         </el-table-column>
@@ -83,35 +83,57 @@
                     state: '',
                     room:''
                 },
-                handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
+                handleList: [],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
             }
         },
 
         mounted(){
-            // this.$axios
-            //     .get('/api/data/getBanzhuanDataInfo')
-            //     .then((res) => {
-            //         let jsonObj=res.data;
-            //         console.log(jsonObj)
-            //         this.code=jsonObj.code;
-            //         this.message=jsonObj.message;
-            //         if(this.code==200){
-            //             this.data=jsonObj.data;
-            //         }
-            //         else {
-            //             this.$alert(this.message);
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
+            this.$axios
+                .get('/api/getDevice')
+                .then((res) => {
+                    let jsonObj=res.data;
+                    let success=res.success;
+                    let message=res.message;
+                    console.log(jsonObj)
+                    if(success==true){
+                        this.handleList=jsonObj.data;
+                    }
+                    else {
+                        this.$alert(message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         methods: {
             check() {
-                console.log('submit!');
+                this.$axios
+                    .get('/api/checkDevice',{
+                        params:{
+                            deviceId:this.formInline.id,
+                            state:this.formInline.state,
+                            room:this.formInline.room
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.handleList=jsonObj.data;
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             reset() {
                 this.formInline.id='';
@@ -127,19 +149,42 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
             },
-            checkInfo(){
-                this.$router.push({path:'/manage/Device_Check'})
-            },
-            editInfo(){
+            editInfo(deviceId){
+                localStorage.setItem("courseId",deviceId);
                 this.$router.push({path:'/manage/Device_Edit'})
             },
-            deleteInfo(){
-                console.log('submit!');
+            deleteInfo(deviceId){
+                this.$axios
+                    .post('/api/data/deleteDevice',{
+                        params:{
+                            courseId:deviceId
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.handleList=jsonObj.data;
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            collectLog2(deviceId){
+                localStorage.setItem("courseId",deviceId);
+                this.$router.push({path:'/manage/Device_Log'})
             },
             addDevice(){
                 this.$router.push({path:'/manage/Device_Add'})
             },
-            collectLog(){
+            collectLog1(){
+                localStorage.setItem("courseId",'');
                 this.$router.push({path:'/manage/Device_Log'})
             },
         }

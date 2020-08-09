@@ -32,7 +32,7 @@
 <!--            >记住密码</el-checkbox>-->
             <el-form-item style="width:100%;">
                 <el-button type="primary" style="width:100%;" @click="handleSubmit" :loading="logining">登录</el-button>
-                <el-button type="text" @click="forget">忘记密码</el-button>
+<!--                <el-button type="text" @click="forget">忘记密码</el-button>-->
             </el-form-item>
         </el-form>
     </div>
@@ -49,6 +49,7 @@ export default {
             ruleForm: {
                 username:'',
                 password:'',
+                userType:'',
             },
             rules: {
                 username: [{required: true, message: 'please enter your account', trigger: 'blur'}],
@@ -58,10 +59,43 @@ export default {
     },
     methods: {
         handleSubmit(event){
+            if(this.radio==1){
+                this.ruleForm.userType ='admin'
+            }
+            else{
+                this.ruleForm.userType ='teacher'
+            }
+
             this.$refs.ruleForm.validate((valid) => {
                 if(valid){
+                    // this.$axios
+                    //     .get('/api/login',{
+                    //         params:{
+                    //             username:this.ruleForm.username,
+                    //             password:this.ruleForm.password,
+                    //             userType:this.ruleForm.userType
+                    //         }
+                    //     })
+                    //     .then((res) => {
+                    //         let jsonObj=res.data;
+                    //         let success=res.success;
+                    //         let message=res.message;
+                    //         console.log(jsonObj)
+                    //         if(success==true){
+                    //             localStorage.setItem("username",jsonObj.username);
+                    //             localStorage.setItem("password",jsonObj.password);
+                    //             localStorage.setItem("userType",jsonObj.userType);
+                    //             this.logining = true;
+                    //             this.$router.push({path:'/manage/SignIn'});
+                    //         }
+                    //         else {
+                    //             this.$alert(message);
+                    //         }
+                    //     })
+                    //     .catch(function (error) {
+                    //         console.log(error);
+                    //     });
                     this.logining = true;
-                    console.log(this.radio)
                     if(this.radio=='1'){
                      localStorage.setItem("userType",'管理员（admin）');
                      console.log(localStorage.getItem("userType"))

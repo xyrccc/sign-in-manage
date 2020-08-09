@@ -17,12 +17,27 @@
         </el-form-item>
         <el-form-item label="*姓名：" prop="name">
           <el-col :span="8">
-            {{this.id}}
+            {{this.name}}
           </el-col>
         </el-form-item>
         <el-form-item label="*学院：" prop="major">
           <el-col :span="8">
-            {{this.id}}
+            {{this.major}}
+          </el-col>
+        </el-form-item>
+        <el-form-item label="*性别：" prop="sex">
+          <el-col :span="8">
+            {{this.sex}}
+          </el-col>
+        </el-form-item>
+        <el-form-item label="*邮箱：" prop="email">
+          <el-col :span="8">
+            {{this.email}}
+          </el-col>
+        </el-form-item>
+        <el-form-item label="*联系方式：" prop="telephone">
+          <el-col :span="8">
+            {{this.telephone}}
           </el-col>
         </el-form-item>
         <el-form-item>
@@ -39,13 +54,24 @@
     export default {
         data() {
             return {
-                id:'000',
+                id:'',
                 name:'',
                 major:'',
+                telephone:'',
+                email:'',
+                sex:'',
             }
         },
 
         mounted(){
+            let str=localStorage.getItem("row")
+            let jsonObj=JSON.parse(str)
+            this.id=jsonObj.teahcerId
+            this.name=jsonObj.teahcerName
+            this.major=jsonObj.major
+            this.email=jsonObj.email
+            this.sex=jsonObj.sex
+            this.telephone=jsonObj.telephone
         },
 
         methods: {

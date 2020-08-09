@@ -95,7 +95,33 @@
                 this.$router.push({path:'/manage/StudentInfo'});
             },
             confirm(){
-                this.$router.push({path:'/manage/StudentInfo'})
+                this.$axios
+                    .post('/api/addStudentInfo',{
+                        params:{
+                            studentId:this.id,
+                            studentName:this.name,
+                            major:this.major,
+                            classroom:this.classroom,
+                            sex:this.sex,
+                            mac:this.mac
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.$alert("添加成功")
+                            this.$router.push({path:'/manage/StudentInfo'})
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             cancel(){
                 this.$router.push({path:'/manage/StudentInfo'})

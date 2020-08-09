@@ -59,20 +59,18 @@
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="课程ID"  ></el-table-column>
-        <el-table-column  prop="id" label="日期"  ></el-table-column>
-        <el-table-column  prop="id" label="时间段"  ></el-table-column>
-        <el-table-column  prop="id" label="教室"></el-table-column>
-        <el-table-column  prop="id" label="课程名称"></el-table-column>
-        <el-table-column  prop="id" label="任课老师"></el-table-column>
-        <el-table-column  prop="id" label="应到人数"></el-table-column>
-        <el-table-column  prop="id" label="实到人数"></el-table-column>
-        <el-table-column  prop="id" label="签到情况"></el-table-column>
+        <el-table-column  prop="courseId" label="课程ID"  ></el-table-column>
+        <el-table-column  prop="date" label="日期"  ></el-table-column>
+        <el-table-column  prop="time" label="时间段"  ></el-table-column>
+        <el-table-column  prop="room" label="教室"></el-table-column>
+        <el-table-column  prop="courseName" label="课程名称"></el-table-column>
+        <el-table-column  prop="teacher" label="任课老师"></el-table-column>
+        <el-table-column  prop="number1" label="应到人数"></el-table-column>
+        <el-table-column  prop="number2" label="实到人数"></el-table-column>
+        <el-table-column  prop="signInState" label="签到情况"></el-table-column>
         <el-table-column fixed="right" label="操作" align='center'>
           <template slot-scope="scope">
-            <el-button type="text" @click="checkInfo">查看详情</el-button>
-            <!--            <el-button v-if="!scope.row.isEgdit" type="primary" size="small" @click='edit(scope.$index,scope.row)' icon="el-icon-edit" circle></el-button>-->
-            <!--            <el-button v-if="scope.row.isEgdit" type="success" size="small" @click='editSuccess(scope.$index,scope.row)' icon="el-icon-check" circle></el-button>-->
+            <el-button type="text" @click="checkInfo(scope.row.courseId)">查看详情</el-button>
           </template>
         </el-table-column>
 
@@ -96,51 +94,74 @@
     export default {
         data() {
             return {
+                value: '',
+                value1: '',
                 formInline: {
-                    date: '',
                     course:'',
                     teacher:'',
                     room:''
                 },
                 options: [{
-                    value: '选项1',
+                    value: '08:00-10:40',
                     label: '08:00-10:40'
                 },
                     {
-                    value: '选项2',
+                    value: '14:00-15:40',
                     label: '14:00-15:40'
                 }],
-                value: '',
-                value1: '',
-                handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
+                handleList:[],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
             }
         },
 
         mounted(){
-            // this.$axios
-            //     .get('/api/data/getBanzhuanDataInfo')
-            //     .then((res) => {
-            //         let jsonObj=res.data;
-            //         console.log(jsonObj)
-            //         this.code=jsonObj.code;
-            //         this.message=jsonObj.message;
-            //         if(this.code==200){
-            //             this.data=jsonObj.data;
-            //         }
-            //         else {
-            //             this.$alert(this.message);
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
+            this.$axios
+                .get('/api/getSign')
+                .then((res) => {
+                    let jsonObj=res.data;
+                    let success=res.success;
+                    let message=res.message;
+                    console.log(jsonObj)
+                    if(success==true){
+                        this.handleList=jsonObj.data;
+                    }
+                    else {
+                        this.$alert(message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         methods: {
             check() {
-                console.log('submit!');
+                this.$axios
+                    .get('/api/checkSignIn',{
+                        params:{
+                            data:this.value1,
+                            time:this.value,
+                            room:this.formInline.room,
+                            courseName:this.formInline.course,
+                            teacher:this.formInline.teacher
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.handleList=jsonObj.data;
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             reset() {
                 this.formInline.room='';
@@ -158,7 +179,8 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
             },
-            checkInfo(){
+            checkInfo(courseId){
+                localStorage.setItem("courseId",courseId);
                 this.$router.push({path:'/manage/SignIn_Check'});
             }
         }

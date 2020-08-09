@@ -72,7 +72,35 @@
                 this.$router.push({path:'/manage/Course'});
             },
             confirm(){
-                this.$router.push({path:'/manage/Course'})
+                this.$axios
+                    .post('/api/editCourse',{
+                        params:{
+                            index:localStorage.getItem("courseId"),
+                            courseId:this.id,
+                            time:this.time,
+                            major:this.major,
+                            room:this.room,
+                            courseName:this.name,
+                            teacher:this.teacher,
+                            number:this.number
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.$alert("编辑成功");
+                            this.$router.push({path:'/manage/Course'})
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             cancel(){
                 this.$router.push({path:'/manage/Course'})

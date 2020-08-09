@@ -59,10 +59,10 @@
                 id:'',
                 name:'',
                 major:'',
-                emil:'',
+                email:'',
                 telephone:'',
-                radio:'1'
-
+                radio:'1',
+                sex:'',
             }
         },
 
@@ -74,8 +74,41 @@
                 this.$router.push({path:'/manage/TeacherInfo'});
             },
             confirm(){
-                this.$router.push({path:'/manage/TeacherInfo'})
-            },
+                if(this.radio==1){
+                    this.sex='男'
+                }
+                else{
+                    this.sex='女'
+                }
+                this.$axios
+                    .post('/api/editTeacherInfo',{
+                        params:{
+                            index:localStorage.getItem("teacherId"),
+                            teacherId:this.id,
+                            teacherName:this.name,
+                            major:this.major,
+                            email:this.email,
+                            sex:this.sex,
+                            telephone:this.telephone
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.$alert("编辑成功");
+                            this.$router.push({path:'/manage/TeacherInfo'})
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                },
             cancel(){
                 this.$router.push({path:'/manage/TeacherInfo'})
             },

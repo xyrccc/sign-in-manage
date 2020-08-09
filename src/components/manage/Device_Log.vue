@@ -74,13 +74,13 @@
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="设备ID"  ></el-table-column>
-        <el-table-column  prop="id" label="终端MAC"  ></el-table-column>
-        <el-table-column  prop="id" label="路由MAC"  ></el-table-column>
-        <el-table-column  prop="id" label="路由名称"></el-table-column>
-        <el-table-column  prop="id" label="参考距离"></el-table-column>
-        <el-table-column  prop="id" label="是否距离"></el-table-column>
-        <el-table-column  prop="id" label="采集时间"></el-table-column>
+        <el-table-column  prop="deviceId" label="设备ID"  ></el-table-column>
+        <el-table-column  prop="mac" label="终端MAC"  ></el-table-column>
+        <el-table-column  prop="loutingId" label="路由MAC"  ></el-table-column>
+        <el-table-column  prop="loutingName" label="路由名称"></el-table-column>
+        <el-table-column  prop="distance" label="参考距离"></el-table-column>
+        <el-table-column  prop="link" label="是否连接"></el-table-column>
+        <el-table-column  prop="time" label="采集时间"></el-table-column>
       </el-table>
 
       <div style="margin-top:20px">
@@ -106,14 +106,34 @@
                     time:'',
                     mac:'',
                 },
-                handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
+                handleList: [],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
             }
         },
 
         mounted(){
-
+            this.$axios
+                .get('/api/getLog',{
+                    params:{
+                        deviceId:localStorage.getItem("deviceId")
+                    }
+                })
+                .then((res) => {
+                    let jsonObj=res.data;
+                    let success=res.success;
+                    let message=res.message;
+                    console.log(jsonObj)
+                    if(success==true){
+                        this.handleList=jsonObj.data;
+                    }
+                    else {
+                        this.$alert(message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         methods: {
@@ -121,7 +141,29 @@
                 this.$router.push({path:'/manage/Device'});
             },
             check() {
-                console.log('submit!');
+                this.$axios
+                    .get('/api/checkLog',{
+                        params:{
+                            deviceId:this.formInline.id,
+                            time:this.formInline.time,
+                            room:this.formInline.room
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.handleList=jsonObj.data;
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             reset() {
                 this.formInline.time='';

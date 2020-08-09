@@ -17,27 +17,27 @@
         </el-form-item>
         <el-form-item label="*姓名：" prop="name">
           <el-col :span="8">
-            {{this.id}}
+            {{this.name}}
           </el-col>
         </el-form-item>
         <el-form-item label="*学院：" prop="major">
           <el-col :span="8">
-            {{this.id}}
+            {{this.major}}
           </el-col>
         </el-form-item>
-        <el-form-item label="*班级：" prop="class">
+        <el-form-item label="*班级：" prop="classroom">
           <el-col :span="8">
-            {{this.id}}
+            {{this.classroom}}
           </el-col>
         </el-form-item>
         <el-form-item label="*性别：" prop="sex">
           <el-col :span="8">
-            {{this.id}}
+            {{this.sex}}
           </el-col>
         </el-form-item>
-        <el-form-item label="*终端：" prop="device">
+        <el-form-item label="*终端：" prop="mac">
           <el-col :span="8">
-            {{this.id}}
+            {{this.mac}}
           </el-col>
         </el-form-item>
         <el-form-item>
@@ -54,16 +54,24 @@
     export default {
         data() {
             return {
-                id:'000',
+                id:'',
                 name:'',
                 major:'',
-                class:'',
-                device:'',
-                radio:'1'
+                classroom:'',
+                mac:'',
+                sex:'',
             }
         },
 
         mounted(){
+            let str=localStorage.getItem("row")
+            let jsonObj=JSON.parse(str)
+            this.id=jsonObj.studentId
+            this.name=jsonObj.studentName
+            this.major=jsonObj.major
+            this.classroom=jsonObj.classroom
+            this.sex=jsonObj.sex
+            this.mac=jsonObj.mac
         },
 
         methods: {

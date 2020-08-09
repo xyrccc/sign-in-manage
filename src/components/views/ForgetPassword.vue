@@ -87,7 +87,7 @@
                 })
             },
             cancel(){
-                this.$router.push({path:'/manage/Admin'})
+                this.$router.push({path:'/'})
             }
         }
     }

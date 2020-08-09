@@ -67,17 +67,17 @@
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="课程ID"  ></el-table-column>
-        <el-table-column  prop="id" label="课程时间"  ></el-table-column>
-        <el-table-column  prop="id" label="教室"  ></el-table-column>
-        <el-table-column  prop="id" label="课程名称"></el-table-column>
-        <el-table-column  prop="id" label="任课老师"></el-table-column>
-        <el-table-column  prop="id" label="选课人数"></el-table-column>
+        <el-table-column  prop="courseId" label="课程ID"  ></el-table-column>
+        <el-table-column  prop="time" label="课程时间"  ></el-table-column>
+        <el-table-column  prop="room" label="教室"  ></el-table-column>
+        <el-table-column  prop="courseName" label="课程名称"></el-table-column>
+        <el-table-column  prop="teacher" label="任课老师"></el-table-column>
+        <el-table-column  prop="number" label="选课人数"></el-table-column>
         <el-table-column fixed="right" label="操作" align='center'>
           <template slot-scope="scope">
-              <el-button type="text" @click="checkInfo">查看</el-button>
-              <el-button type="text" @click="editInfo">编辑</el-button>
-              <el-button type="text" @click="deleteInfo">删除</el-button>
+              <el-button type="text" @click="checkInfo(scope.row.courseId,scope.row.courseName)">查看</el-button>
+              <el-button type="text" @click="editInfo(scope.row.courseId)">编辑</el-button>
+              <el-button type="text" @click="deleteInfo(scope.row.courseId)">删除</el-button>
             <!--            <el-button v-if="!scope.row.isEgdit" type="primary" size="small" @click='edit(scope.$index,scope.row)' icon="el-icon-edit" circle></el-button>-->
             <!--            <el-button v-if="scope.row.isEgdit" type="success" size="small" @click='editSuccess(scope.$index,scope.row)' icon="el-icon-check" circle></el-button>-->
           </template>
@@ -103,51 +103,74 @@
     export default {
         data() {
             return {
+                value: '',
+                value1: '',
                 formInline: {
-                    date: '',
                     course:'',
                     teacher:'',
                     room:''
                 },
                 options: [{
-                    value: '选项1',
+                    value: '08:00-10:40',
                     label: '08:00-10:40'
                 },
                     {
-                        value: '选项2',
+                        value: '14:00-15:40',
                         label: '14:00-15:40'
                     }],
-                value: '',
-                value1: '',
-                handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
+                handleList: [],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
             }
         },
 
         mounted(){
-            // this.$axios
-            //     .get('/api/data/getBanzhuanDataInfo')
-            //     .then((res) => {
-            //         let jsonObj=res.data;
-            //         console.log(jsonObj)
-            //         this.code=jsonObj.code;
-            //         this.message=jsonObj.message;
-            //         if(this.code==200){
-            //             this.data=jsonObj.data;
-            //         }
-            //         else {
-            //             this.$alert(this.message);
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
+            this.$axios
+                .get('/api/getCourse')
+                .then((res) => {
+                    let jsonObj=res.data;
+                    let success=res.success;
+                    let message=res.message;
+                    console.log(jsonObj)
+                    if(success==true){
+                        this.handleList=jsonObj.data;
+                    }
+                    else {
+                        this.$alert(message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         methods: {
             check() {
-                console.log('submit!');
+                this.$axios
+                    .get('/api/checkCouese',{
+                        params:{
+                            data:this.value1,
+                            time:this.value,
+                            room:this.formInline.room,
+                            courseName:this.formInline.course,
+                            teacher:this.formInline.teacher
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.handleList=jsonObj.data;
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             reset() {
                 this.formInline.room='';
@@ -165,14 +188,37 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
             },
-            checkInfo(){
+            checkInfo(courseId,courseName){
+                localStorage.setItem("courseId",courseId);
+                localStorage.setItem("courseName",courseName);
                 this.$router.push({path:'/manage/Course_Check'})
             },
-            editInfo(){
+            editInfo(courseId){
+                localStorage.setItem("courseId",courseId);
                 this.$router.push({path:'/manage/Course_Edit'})
             },
-            deleteInfo(){
-                console.log('submit!');
+            deleteInfo(courseId){
+                this.$axios
+                    .get('/api/data/deleteCourse',{
+                        params:{
+                            courseId:courseId
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.handleList=jsonObj.data;
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             addCourse(){
                 this.$router.push({path:'/manage/Course_Add'})

@@ -4,9 +4,6 @@
     <div class="title">
       <el-button type="text" class="title" size="mini" @click="goBack">账号管理>修改密码</el-button>
     </div>
-<!--    <div class="title">-->
-<!--      账号管理>修改密码-->
-<!--    </div>-->
 
     <el-card>
       <el-form :model="ruleForm" :rules="rules"
@@ -34,27 +31,27 @@
           ></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item prop="question">
-          <el-col :span="6">
-            <el-select v-model="ruleForm.question" placeholder="请选择新的密保问题">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-form-item>
-        <el-form-item prop="answer">
-          <el-col :span="6">
-            <el-input type="text"
-                      v-model="ruleForm.answer"
-                      auto-complete="off"
-                      placeholder="请输入密保答案"
-            ></el-input>
-          </el-col>
-        </el-form-item>
+<!--        <el-form-item prop="question">-->
+<!--          <el-col :span="6">-->
+<!--            <el-select v-model="ruleForm.question" placeholder="请选择新的密保问题">-->
+<!--              <el-option-->
+<!--                v-for="item in options"-->
+<!--                :key="item.value"-->
+<!--                :label="item.label"-->
+<!--                :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-col>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item prop="answer">-->
+<!--          <el-col :span="6">-->
+<!--            <el-input type="text"-->
+<!--                      v-model="ruleForm.answer"-->
+<!--                      auto-complete="off"-->
+<!--                      placeholder="请输入密保答案"-->
+<!--            ></el-input>-->
+<!--          </el-col>-->
+<!--        </el-form-item>-->
         <el-form-item>
           <el-col :span="8">
             <el-button type="primary" @click="handleSubmit">提交</el-button>
@@ -75,25 +72,25 @@
                 ruleForm: {
                     newPwd:'',
                     newPwd2:'',
-                    question: '',
-                    answer:''
+                    // question: '',
+                    // answer:''
                 },
                 rules: {
                     newPwd: [{required: true, message: 'please enter your new password', trigger: 'blur'}],
                     newPwd2: [{required: true, message: 'please check your new password', trigger: 'blur'}],
-                    question: [{required: true, message: 'please pick your new question', trigger: 'change'}],
-                    answer: [{required: true, message: 'please enter your answer', trigger: 'blur'}],
+                    // question: [{required: true, message: 'please pick your new question', trigger: 'change'}],
+                    // answer: [{required: true, message: 'please enter your answer', trigger: 'blur'}],
                 },
-                options: [{
-                    value: '选项1',
-                    label: '你妈妈的名字'
-                }, {
-                    value: '选项2',
-                    label: '你爸爸的名字'
-                },{
-                    value: '选项2',
-                    label: '你的名字'
-                }],
+                // options: [{
+                //     value: '选项1',
+                //     label: '你妈妈的名字'
+                // }, {
+                //     value: '选项2',
+                //     label: '你爸爸的名字'
+                // },{
+                //     value: '选项2',
+                //     label: '你的名字'
+                // }],
             };
         },
         mounted(){
@@ -109,12 +106,32 @@
                     if(valid){
                         let pwd=this.ruleForm.newPwd;
                         let pwd2=this.ruleForm.newPwd2;
+                        let username=localStorage.getItem("username");
                         if(pwd==pwd2){
-                            localStorage.setItem("password",this.ruleForm.newPwd);
-                            localStorage.setItem("question",this.ruleForm.question);
-                            localStorage.setItem("answer",this.ruleForm.answer);
                             //修改密码接口
-                            this.$alert('成功修改密码！');
+                            this.$axios
+                                .get('/api/changePwd',{
+                                    params:{
+                                        username:username,
+                                        newPwd:pwd2
+                                    }
+                                })
+                                .then((res) => {
+                                    let jsonObj=res.data;
+                                    let success=res.success;
+                                    let message=res.message;
+                                    console.log(jsonObj)
+                                    if(success==true){
+                                        localStorage.setItem("password",jsonObj.password);
+                                        this.$alert('成功修改密码！');
+                                    }
+                                    else {
+                                        this.$alert(message);
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
                         }
                         else{
                             this.$alert('两次密码不同！');

@@ -21,7 +21,7 @@
             <el-input v-model="key" placeholder="请输入设备KEY"></el-input>
           </el-col>
           <el-col :span="4">
-            <el-input v-model="classroom" placeholder="请输入设备所在教室"></el-input>
+            <el-input v-model="room" placeholder="请输入设备所在教室"></el-input>
           </el-col>
           <el-col :span="12">
             <el-button type="text" icon="el-icon-circle-plus-outline"></el-button>
@@ -70,7 +70,7 @@
         data() {
             return {
                 id:'',
-                classroom:'',
+                room:'',
                 key:'',
             }
         },
@@ -83,7 +83,30 @@
                 this.$router.push({path:'/manage/Device'});
             },
             confirm(){
-                this.$router.push({path:'/manage/Device'})
+                this.$axios
+                    .post('/api/addDevice',{
+                        params:{
+                            deviceId:this.id,
+                            key:this.key,
+                            room:this.room,
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.$alert("添加成功")
+                            this.$router.push({path:'/manage/Device'})
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             cancel(){
                 this.$router.push({path:'/manage/Device'})

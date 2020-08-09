@@ -16,15 +16,15 @@
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="课时"  ></el-table-column>
-        <el-table-column  prop="id" label="课程日期"  ></el-table-column>
-        <el-table-column  prop="id" label="时间段"  ></el-table-column>
-        <el-table-column  prop="id" label="签到时间"></el-table-column>
-        <el-table-column  prop="id" label="签退时间"></el-table-column>
-        <el-table-column  prop="id" label="签到情况"></el-table-column>
+        <el-table-column  prop="courseTime" label="课时"  ></el-table-column>
+        <el-table-column  prop="data" label="课程日期"  ></el-table-column>
+        <el-table-column  prop="time" label="时间段"  ></el-table-column>
+        <el-table-column  prop="signInTime" label="签到时间"></el-table-column>
+        <el-table-column  prop="signOutTime" label="签退时间"></el-table-column>
+        <el-table-column  prop="signInState" label="签到情况"></el-table-column>
         <el-table-column fixed="right" label="操作" align='center'>
           <template slot-scope="scope">
-            <el-button type="text" @click="editInfo">编辑</el-button>
+            <el-button type="text" @click="editInfo(scope.row.courseTime)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,39 +47,43 @@
     export default {
         data() {
             return {
-                handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
+                handleList: [],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
-                studentId:'201626810201',
-                studentName:'张三',
-            }
+                studentId:localStorage.getItem("studentId"),
+                studentName:localStorage.getItem("studentName"),            }
         },
 
         mounted(){
-            // this.$axios
-            //     .get('/api/data/getBanzhuanDataInfo')
-            //     .then((res) => {
-            //         let jsonObj=res.data;
-            //         console.log(jsonObj)
-            //         this.code=jsonObj.code;
-            //         this.message=jsonObj.message;
-            //         if(this.code==200){
-            //             this.data=jsonObj.data;
-            //         }
-            //         else {
-            //             this.$alert(this.message);
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
+            this.$axios
+                .get('/api/getStudentSignInInfo',{
+                    params:{
+                        studentId:localStorage.getItem("studentId"),
+                    }
+                })
+                .then((res) => {
+                    let jsonObj=res.data;
+                    let success=res.success;
+                    let message=res.message;
+                    console.log(jsonObj)
+                    if(success==true){
+                        this.handleList=jsonObj.data;
+                    }
+                    else {
+                        this.$alert(message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         methods: {
             goBack(){
                 this.$router.push({path:'/manage/Course_Check'});
             },
-            editInfo() {
+            editInfo(courseTime) {
+                localStorage.setItem("courseTime",courseTime)
                 this.$router.push({path:'/manage/Course_Check_Check_Edit'})
             },
             // 每页多少条

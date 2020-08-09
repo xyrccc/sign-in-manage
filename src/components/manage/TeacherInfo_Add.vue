@@ -27,10 +27,10 @@
             <el-input v-model="sex" placeholder="请输入性别"></el-input>
           </el-col>
           <el-col :span="4">
-            <el-input v-model="emil" placeholder="请输入邮箱"></el-input>
+            <el-input v-model="email" placeholder="请输入邮箱"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-input v-model="phone" placeholder="请输入联系方式"></el-input>
+            <el-input v-model="telephone" placeholder="请输入联系方式"></el-input>
           </el-col>
           <el-col :span="1">
             <el-button type="text" icon="el-icon-circle-plus-outline"></el-button>
@@ -80,11 +80,10 @@
             return {
                 id:'',
                 name:'',
-                mac:'',
-                phone:'',
+                telephone:'',
                 major:'',
                 sex:'',
-                emil:'',
+                email:'',
             }
         },
 
@@ -96,8 +95,33 @@
                 this.$router.push({path:'/manage/TeacherInfo'});
             },
             confirm(){
-                this.$router.push({path:'/manage/TeacherInfo'})
-            },
+                this.$axios
+                    .post('/api/addTeacherInfo',{
+                        params:{
+                            teacherId:this.id,
+                            teacherName:this.name,
+                            major:this.major,
+                            email:this.email,
+                            sex:this.sex,
+                            telephone:this.telephone
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.$alert("添加成功")
+                            this.$router.push({path:'/manage/TeacherInfo'})
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });            },
             cancel(){
                 this.$router.push({path:'/manage/TeacherInfo'})
             },

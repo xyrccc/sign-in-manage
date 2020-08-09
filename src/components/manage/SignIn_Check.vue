@@ -37,14 +37,14 @@
 
       <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
         <el-table-column  type="index" label="序号" width="100"></el-table-column>
-        <el-table-column  prop="id" label="学号"  ></el-table-column>
-        <el-table-column  prop="id" label="姓名"  ></el-table-column>
-        <el-table-column  prop="id" label="学院"  ></el-table-column>
-        <el-table-column  prop="id" label="班级"></el-table-column>
-        <el-table-column  prop="id" label="性别"></el-table-column>
-        <el-table-column  prop="id" label="签到时间"></el-table-column>
-        <el-table-column  prop="id" label="签退时间"></el-table-column>
-        <el-table-column  prop="id" label="签到情况"></el-table-column>
+        <el-table-column  prop="studentId" label="学号"  ></el-table-column>
+        <el-table-column  prop="studentName" label="姓名"  ></el-table-column>
+        <el-table-column  prop="major" label="学院"  ></el-table-column>
+        <el-table-column  prop="classroom" label="班级"></el-table-column>
+        <el-table-column  prop="sex" label="性别"></el-table-column>
+        <el-table-column  prop="signInTime" label="签到时间"></el-table-column>
+        <el-table-column  prop="signOutTime" label="签退时间"></el-table-column>
+        <el-table-column  prop="signInState" label="签到情况"></el-table-column>
       </el-table>
 
       <div style="margin-top:20px">
@@ -66,36 +66,38 @@
         data() {
             return {
                 formInline: {
-                    date: '',
-                    time: '',
-                    course:'',
-                    teacher:'',
-                    room:''
+                    id: '',
+                    neme: '',
+                    info:'',
                 },
-                handleList: [{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'},{id:'0'}],
+                handleList: [],
                 currentPage: 1,// 当前页
                 pageSize: 5,// 每页多少条
             }
         },
 
         mounted(){
-            // this.$axios
-            //     .get('/api/data/getBanzhuanDataInfo')
-            //     .then((res) => {
-            //         let jsonObj=res.data;
-            //         console.log(jsonObj)
-            //         this.code=jsonObj.code;
-            //         this.message=jsonObj.message;
-            //         if(this.code==200){
-            //             this.data=jsonObj.data;
-            //         }
-            //         else {
-            //             this.$alert(this.message);
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
+            this.$axios
+                .get('/api/getSignInfo',{
+                    params:{
+                        courseId:localStorage.getItem("courseId")
+                    }
+                })
+                .then((res) => {
+                    let jsonObj=res.data;
+                    let success=res.success;
+                    let message=res.message;
+                    console.log(jsonObj)
+                    if(success==true){
+                        this.handleList=jsonObj.data;
+                    }
+                    else {
+                        this.$alert(message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         methods: {
@@ -103,7 +105,29 @@
                 this.$router.push({path:'/manage/SignIn'});
             },
             check() {
-                console.log('submit!');
+                this.$axios
+                    .get('/api/checkSignInInfo',{
+                        params:{
+                            stydentId:this.formInline.id,
+                            stydentName:this.formInline.name,
+                            signInState:this.formInline.info
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.handleList=jsonObj.data;
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             reset() {
                 this.id='';

@@ -49,6 +49,7 @@
         },
 
         mounted(){
+
         },
 
         methods: {
@@ -56,7 +57,31 @@
                 this.$router.push({path:'/manage/Device'});
             },
             confirm(){
-                this.$router.push({path:'/manage/Device'})
+                this.$axios
+                    .post('/api/editDevice',{
+                        params:{
+                            index:localStorage.getItem("deviceId"),
+                            deviceId:this.id,
+                            key:this.key,
+                            room:this.room,
+                        }
+                    })
+                    .then((res) => {
+                        let jsonObj=res.data;
+                        let success=res.success;
+                        let message=res.message;
+                        console.log(jsonObj)
+                        if(success==true){
+                            this.$alert("编辑成功");
+                            this.$router.push({path:'/manage/Device'});
+                        }
+                        else {
+                            this.$alert(message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             cancel(){
                 this.$router.push({path:'/manage/Device'})
